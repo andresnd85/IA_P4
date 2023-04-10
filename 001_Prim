@@ -1,0 +1,54 @@
+# IA_P4
+# Implementación del algoritmo de Prim para encontrar el árbol de expansión mínima
+# en un grafo ponderado no dirigido representado con matriz de adyacencia
+
+def prim(graph):
+    n = len(graph)  # Número de nodos en el grafo
+    mst = [None] * n  # Lista para almacenar el árbol de expansión mínima
+    key = [float('inf')] * n  # Lista para almacenar las distancias mínimas
+    key[0] = 0  # Inicializamos la distancia del nodo inicial como 0
+    included = [False] * n  # Lista para almacenar los nodos incluidos en el árbol
+
+    # Iteramos para encontrar n-1 aristas en el árbol de expansión mínima
+    for _ in range(n):
+        # Buscamos el nodo con la distancia mínima que no ha sido incluido en el árbol aún
+        u = min_key(key, included)
+
+        # Actualizamos las distancias de los nodos adyacentes no incluidos en el árbol
+        for v in range(n):
+            if not included[v] and graph[u][v] < key[v]:
+                key[v] = graph[u][v]
+                mst[v] = u
+
+        included[u] = True  # Marcamos el nodo como incluido en el árbol
+
+    return mst
+
+def min_key(key, included):
+    # Función auxiliar para encontrar el nodo con la distancia mínima
+    min_value = float('inf')
+    min_node = None
+    for node in range(len(key)):
+        if key[node] < min_value and not included[node]:
+            min_value = key[node]
+            min_node = node
+    return min_node
+
+# Ejemplo de uso
+
+# Grafo representado con matriz de adyacencia
+graph = [
+    [0, 2, float('inf'), 6, float('inf')],
+    [2, 0, 3, 8, 5],
+    [float('inf'), 3, 0, float('inf'), 7],
+    [6, 8, float('inf'), 0, 9],
+    [float('inf'), 5, 7, 9, 0]
+]
+
+# Llamamos a la función prim para obtener el árbol de expansión mínima
+mst = prim(graph)
+
+# Imprimimos el resultado
+print("Árbol de expansión mínima:")
+for node in range(1, len(mst)):
+    print(f"{mst[node]} - {node}  (peso: {graph[mst[node]][node]})")
